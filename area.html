@@ -7,11 +7,11 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f7f7f7;
+      background: #f0f0f0;
       padding: 30px;
     }
     .container {
-      max-width: 450px;
+      max-width: 400px;
       background: white;
       padding: 20px;
       border-radius: 10px;
@@ -23,9 +23,6 @@
       padding: 10px;
       margin: 10px 0;
     }
-    .input-group {
-      display: none;
-    }
     #result {
       margin-top: 20px;
       font-weight: bold;
@@ -36,42 +33,14 @@
 <body>
   <div class="container">
     <h2>Area Calculator</h2>
-    
     <label for="shape">Select Shape:</label>
-    <select id="shape" onchange="updateInputs()">
+    <select id="shape" onchange="updateLabel()">
       <option value="circle">Circle</option>
       <option value="square">Square</option>
-      <option value="rectangle">Rectangle</option>
-      <option value="triangle">Triangle</option>
     </select>
 
-    <!-- Circle -->
-    <div class="input-group" id="circleInputs">
-      <label for="circleRadius">Enter Radius:</label>
-      <input type="number" id="circleRadius" placeholder="Radius" />
-    </div>
-
-    <!-- Square -->
-    <div class="input-group" id="squareInputs">
-      <label for="squareSide">Enter Side:</label>
-      <input type="number" id="squareSide" placeholder="Side" />
-    </div>
-
-    <!-- Rectangle -->
-    <div class="input-group" id="rectangleInputs">
-      <label for="rectangleLength">Enter Length:</label>
-      <input type="number" id="rectangleLength" placeholder="Length" />
-      <label for="rectangleWidth">Enter Width:</label>
-      <input type="number" id="rectangleWidth" placeholder="Width" />
-    </div>
-
-    <!-- Triangle -->
-    <div class="input-group" id="triangleInputs">
-      <label for="triangleBase">Enter Base:</label>
-      <input type="number" id="triangleBase" placeholder="Base" />
-      <label for="triangleHeight">Enter Height:</label>
-      <input type="number" id="triangleHeight" placeholder="Height" />
-    </div>
+    <label id="inputLabel" for="value">Enter Radius:</label>
+    <input type="number" id="value" placeholder="Enter value" />
 
     <button onclick="calculateArea()">Calculate Area</button>
     <div id="result"></div>
@@ -86,58 +55,30 @@
       return side * side;
     }
 
-    function calculateRectangleArea(length, width) {
-      return length * width;
-    }
-
-    function calculateTriangleArea(base, height) {
-      return 0.5 * base * height;
-    }
-
-    function updateInputs() {
+    function updateLabel() {
       const shape = document.getElementById("shape").value;
-      const inputGroups = ["circleInputs", "squareInputs", "rectangleInputs", "triangleInputs"];
-      inputGroups.forEach(id => document.getElementById(id).style.display = "none");
-      document.getElementById(`${shape}Inputs`).style.display = "block";
-      document.getElementById("result").textContent = "";
+      const label = document.getElementById("inputLabel");
+      label.textContent = shape === "circle" ? "Enter Radius:" : "Enter Side:";
     }
 
     function calculateArea() {
       const shape = document.getElementById("shape").value;
+      const value = parseFloat(document.getElementById("value").value);
       let area = 0;
 
+      if (isNaN(value) || value <= 0) {
+        document.getElementById("result").textContent = "Please enter a valid positive number.";
+        return;
+      }
+
       if (shape === "circle") {
-        const r = parseFloat(document.getElementById("circleRadius").value);
-        if (r <= 0 || isNaN(r)) return showError();
-        area = calculateCircleArea(r);
-
+        area = calculateCircleArea(value);
       } else if (shape === "square") {
-        const s = parseFloat(document.getElementById("squareSide").value);
-        if (s <= 0 || isNaN(s)) return showError();
-        area = calculateSquareArea(s);
-
-      } else if (shape === "rectangle") {
-        const l = parseFloat(document.getElementById("rectangleLength").value);
-        const w = parseFloat(document.getElementById("rectangleWidth").value);
-        if (l <= 0 || w <= 0 || isNaN(l) || isNaN(w)) return showError();
-        area = calculateRectangleArea(l, w);
-
-      } else if (shape === "triangle") {
-        const b = parseFloat(document.getElementById("triangleBase").value);
-        const h = parseFloat(document.getElementById("triangleHeight").value);
-        if (b <= 0 || h <= 0 || isNaN(b) || isNaN(h)) return showError();
-        area = calculateTriangleArea(b, h);
+        area = calculateSquareArea(value);
       }
 
       document.getElementById("result").textContent = `Area of ${shape}: ${area.toFixed(2)}`;
     }
-
-    function showError() {
-      document.getElementById("result").textContent = "❌ Please enter valid positive number(s).";
-    }
-
-    // Show the first one (circle) by default
-    updateInputs();
   </script>
 </body>
 </html>
