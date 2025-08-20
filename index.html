@@ -5,80 +5,289 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Area Calculator</title>
   <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
     body {
-      font-family: Arial, sans-serif;
-      background: #f0f0f0;
-      padding: 30px;
-    }
-    .container {
-      max-width: 400px;
-      background: white;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
       padding: 20px;
-      border-radius: 10px;
-      margin: auto;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
-    input, select, button {
+    
+    .main-header {
+      text-align: center;
+      margin-bottom: 30px;
+      color: white;
+    }
+    
+    .main-header h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+    
+    .main-header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+      font-weight: 300;
+    }
+    
+    .container {
+      max-width: 420px;
       width: 100%;
-      padding: 10px;
-      margin: 10px 0;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 40px;
+      border-radius: 24px;
+      box-shadow: 
+        0 20px 40px rgba(0,0,0,0.1),
+        0 0 0 1px rgba(255,255,255,0.1) inset;
+      position: relative;
+      overflow: hidden;
     }
+    
+    .container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+    }
+    
+    .form-group {
+      margin-bottom: 24px;
+    }
+    
+    label {
+      display: block;
+      font-weight: 600;
+      color: #374151;
+      margin-bottom: 8px;
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    
+    select, input {
+      width: 100%;
+      padding: 16px 20px;
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      font-size: 1rem;
+      background: white;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      outline: none;
+    }
+    
+    select:focus, input:focus {
+      border-color: #667eea;
+      box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+      transform: translateY(-1px);
+    }
+    
+    select:hover, input:hover {
+      border-color: #9ca3af;
+    }
+    
+    .calculate-btn {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 16px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .calculate-btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    .calculate-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+    }
+    
+    .calculate-btn:hover::before {
+      left: 100%;
+    }
+    
+    .calculate-btn:active {
+      transform: translateY(0);
+    }
+    
     #result {
-      margin-top: 20px;
-      font-weight: bold;
-      color: #2c3e50;
+      margin-top: 30px;
+      padding: 20px;
+      background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+      border-radius: 16px;
+      border-left: 4px solid #667eea;
+      font-weight: 600;
+      color: #1e293b;
+      font-size: 1.1rem;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s ease;
+    }
+    
+    #result.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    
+    .shape-icon {
+      display: inline-block;
+      margin-right: 8px;
+      font-size: 1.2em;
+    }
+    
+    .footer {
+      margin-top: 40px;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.8);
+      font-size: 0.9rem;
+    }
+    
+    .footer a {
+      color: rgba(255, 255, 255, 0.9);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    
+    .footer a:hover {
+      color: white;
+    }
+    
+    @media (max-width: 480px) {
+      .main-header h1 {
+        font-size: 2.5rem;
+      }
+      
+      .container {
+        padding: 30px;
+        margin: 0 10px;
+      }
+    }
+    
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
     }
   </style>
 </head>
 <body>
+  <div class="main-header">
+    <h1>Area Calculator</h1>
+    <p>Calculate areas with precision and style</p>
+  </div>
+  
   <div class="container">
-    <h2>Area Calculator</h2>
-    <label for="shape">Select Shape:</label>
-    <select id="shape" onchange="updateLabel()">
-      <option value="circle">Circle</option>
-      <option value="square">Square</option>
-    </select>
-
-    <label id="inputLabel" for="value">Enter Radius:</label>
-    <input type="number" id="value" placeholder="Enter value" />
-
-    <button onclick="calculateArea()">Calculate Area</button>
+    <div class="form-group">
+      <label for="shape">Select Shape</label>
+      <select id="shape" onchange="updateLabel()">
+        <option value="circle">🔵 Circle</option>
+        <option value="square">⬛ Square</option>
+      </select>
+    </div>
+    
+    <div class="form-group">
+      <label id="inputLabel" for="value">Enter Radius</label>
+      <input type="number" id="value" placeholder="Enter value" step="0.01" />
+    </div>
+    
+    <button class="calculate-btn" onclick="calculateArea()">
+      Calculate Area
+    </button>
+    
     <div id="result"></div>
   </div>
-
+  
+  <div class="footer">
+    Built by <a href="#" class="pulse">Rahul Rathore</a>
+  </div>
+  
   <script>
     function calculateCircleArea(radius) {
       return Math.PI * radius * radius;
     }
-
+    
     function calculateSquareArea(side) {
       return side * side;
     }
-
+    
     function updateLabel() {
       const shape = document.getElementById("shape").value;
       const label = document.getElementById("inputLabel");
-      label.textContent = shape === "circle" ? "Enter Radius:" : "Enter Side:";
+      label.textContent = shape === "circle" ? "Enter Radius" : "Enter Side Length";
     }
-
+    
     function calculateArea() {
       const shape = document.getElementById("shape").value;
       const value = parseFloat(document.getElementById("value").value);
-      let area = 0;
-
+      const resultDiv = document.getElementById("result");
+      
       if (isNaN(value) || value <= 0) {
-        document.getElementById("result").textContent = "Please enter a valid positive number.";
+        resultDiv.textContent = "⚠️ Please enter a valid positive number.";
+        resultDiv.classList.add("show");
         return;
       }
-
+      
+      let area = 0;
+      let icon = "";
+      
       if (shape === "circle") {
         area = calculateCircleArea(value);
+        icon = "🔵";
       } else if (shape === "square") {
         area = calculateSquareArea(value);
+        icon = "⬛";
       }
-
-      document.getElementById("result").textContent = `Area of ${shape}: ${area.toFixed(2)}`;
+      
+      resultDiv.innerHTML = `<span class="shape-icon">${icon}</span>Area of ${shape}: <strong>${area.toFixed(2)} units²</strong>`;
+      resultDiv.classList.add("show");
     }
+    
+    // Add enter key support
+    document.getElementById("value").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        calculateArea();
+      }
+    });
   </script>
 </body>
 </html>
