@@ -220,8 +220,8 @@
     <div class="form-group">
       <label for="shape">Select Shape</label>
       <select id="shape" onchange="updateLabel()">
-        <option value="circle">🔵 Circle</option>
-        <option value="square">⬛ Square</option>
+        <option value="circle">Circle</option>
+        <option value="square">Square</option>
       </select>
     </div>
     
@@ -272,10 +272,8 @@
       
       if (shape === "circle") {
         area = calculateCircleArea(value);
-        icon = "🔵";
       } else if (shape === "square") {
         area = calculateSquareArea(value);
-        icon = "⬛";
       }
       
       resultDiv.innerHTML = `<span class="shape-icon">${icon}</span>Area of ${shape}: <strong>${area.toFixed(2)} units²</strong>`;
